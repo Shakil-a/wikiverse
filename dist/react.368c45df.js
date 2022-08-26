@@ -30323,24 +30323,47 @@ try {
   }
 }
 
-},{}],"react/components/Page.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Page = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Page = function Page(props) {
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("h3", null, props.page.title));
+},{}],"../server/seedData.js":[function(require,module,exports) {
+module.exports = {
+  pages: [{
+    title: "First Page",
+    content: "This is my first page. I hope I love writing articles as much as I love reading them.",
+    status: 'closed',
+    authorId: 2
+  }, {
+    title: "Duff",
+    content: "This is Homer Simpson's drink of choice.",
+    status: 'closed',
+    authorId: 1
+  }, {
+    title: "Living the Glam Life",
+    content: "Do you even? I swear that half of you are posing.",
+    status: 'open',
+    authorId: 1
+  }, {
+    title: "Eleanor of Aquitaine",
+    content: "This medieval queen was married to both Louis VII of France and Henry II of England.",
+    status: 'open',
+    authorId: 2
+  }],
+  users: [{
+    name: 'Annie Position',
+    email: 'annie@email.com'
+  }, {
+    name: 'Bea O-Problem',
+    email: 'bea@email.com'
+  }],
+  tags: [{
+    name: 'happy'
+  }, {
+    name: 'youcandoanything'
+  }, {
+    name: 'canpeopledoeverything'
+  }, {
+    name: 'royalty'
+  }]
 };
-
-exports.Page = Page;
-},{"react":"../node_modules/react/index.js"}],"react/components/PagesList.js":[function(require,module,exports) {
+},{}],"react/components/PagesList.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30350,22 +30373,46 @@ exports.PagesList = void 0;
 
 var _react = _interopRequireDefault(require("react"));
 
-var _Page = require("./Page");
+var _seedData = require("../../../server/seedData");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//  import React from 'react';
+//  import { Page } from './Page';
+// export const PagesList = ({pages}) => {
+//  	return <>
+//  		{
+//  			pages.map((page, idx) => {
+// 				return <Page page={page} key={idx} />
+// 			})
+// 		}
+// 	</>
+//  } 
+//import { pages, tags } from './Page';
+// this allows us to view the page of article titles through making the setIsPageView true and also passing the page into setPageView
 var PagesList = function PagesList(_ref) {
-  var pages = _ref.pages;
+  var pages = _ref.pages,
+      setIsPageView = _ref.setIsPageView,
+      setPageView = _ref.setPageView;
+
+  var clickHandler = function clickHandler(page) {
+    setIsPageView(true);
+    setPageView(page);
+  }; // the .map() method iterates through the array of articles and assigns them a key in which they can be used later on.
+
+
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, pages.map(function (page, idx) {
-    return /*#__PURE__*/_react.default.createElement(_Page.Page, {
-      page: page,
-      key: idx
-    });
+    return /*#__PURE__*/_react.default.createElement("h3", {
+      key: idx,
+      onClick: function onClick() {
+        return clickHandler(page);
+      }
+    }, page.title);
   }));
 };
 
 exports.PagesList = PagesList;
-},{"react":"../node_modules/react/index.js","./Page":"react/components/Page.js"}],"react/api.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../../server/seedData":"../server/seedData.js"}],"react/api.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30382,7 +30429,155 @@ if ("development" === 'development') {
 
 var _default = apiURL;
 exports.default = _default;
-},{}],"react/components/App.js":[function(require,module,exports) {
+},{}],"react/components/Page.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Page = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _seedData = require("../../../server/seedData");
+
+var _App = require("../components/App");
+
+var _api = _interopRequireDefault(require("../api"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// 
+var Page = function Page(_ref) {
+  var page = _ref.page,
+      setIsPageView = _ref.setIsPageView;
+  //   const [page, setPage] = useState(' ')
+  //   const handleClick = async () => {
+  //     const res = await fetch(`${apiURL}/wiki`)
+  //     const data = await res.json()
+  //     setPage(data)
+  // }
+
+  /* this is where we are passing in the information from the page.js and the two parameters page and setIsPageView is being used,
+  the onClick changes the default of setIsPageView from true to false so that we can return to the page of titles once we click the button*/
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("h3", null, page.title), /*#__PURE__*/_react.default.createElement("h4", null, "Author: ", page.authorId), /*#__PURE__*/_react.default.createElement("h4", null, "Published: ", page.status), /*#__PURE__*/_react.default.createElement("p", null, page.content), /*#__PURE__*/_react.default.createElement("h4", null, "Tags: ", page.tags), /*#__PURE__*/_react.default.createElement("button", {
+    onClick: function onClick() {
+      return setIsPageView(false);
+    }
+  }, " Back to Wikiverse"));
+};
+
+exports.Page = Page;
+},{"react":"../node_modules/react/index.js","../../../server/seedData":"../server/seedData.js","../components/App":"react/components/App.js","../api":"react/api.js"}],"react/components/form.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AddForm = void 0;
+
+var _react = _interopRequireWildcard(require("react"));
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+var AddForm = function AddForm() {
+  function AddForm() {
+    var _useState = (0, _react.useState)(''),
+        _useState2 = _slicedToArray(_useState, 2),
+        title = _useState2[0],
+        setTitle = _useState2[1];
+
+    var _useState3 = (0, _react.useState)(''),
+        _useState4 = _slicedToArray(_useState3, 2),
+        articleContent = _useState4[0],
+        setArticleContent = _useState4[1];
+
+    var _useState5 = (0, _react.useState)(''),
+        _useState6 = _slicedToArray(_useState5, 2),
+        authorName = _useState6[0],
+        setAuthorName = _useState6[1];
+
+    var _useState7 = (0, _react.useState)(''),
+        _useState8 = _slicedToArray(_useState7, 2),
+        authorEmail = _useState8[0],
+        setAuthorEmail = _useState8[1];
+
+    var _useState9 = (0, _react.useState)(''),
+        _useState10 = _slicedToArray(_useState9, 2),
+        tags = _useState10[0],
+        setTags = _useState10[1];
+
+    return /*#__PURE__*/_react.default.createElement("main", null, /*#__PURE__*/_react.default.createElement("form", {
+      onSubmit: handleSubmit
+    }, /*#__PURE__*/_react.default.createElement("h1", null, "wikiPedia"), /*#__PURE__*/_react.default.createElement("p", null, "Please fill out this form"), /*#__PURE__*/_react.default.createElement("label", null), /*#__PURE__*/_react.default.createElement("input", {
+      type: "test",
+      placeholder: "Title",
+      value: title,
+      onChange: function onChange(e) {
+        return setTitle(e.target.value);
+      }
+    }), /*#__PURE__*/_react.default.createElement("input", {
+      type: "test",
+      placeholder: "Article Content",
+      value: articleContent,
+      onChange: function onChange(e) {
+        return setArticleContent(e.target.value);
+      }
+    }), /*#__PURE__*/_react.default.createElement("input", {
+      type: "test",
+      placeholder: "Author Name",
+      value: authorName,
+      onChange: function onChange(e) {
+        return setAuthorName(e.target.value);
+      }
+    }), /*#__PURE__*/_react.default.createElement("input", {
+      type: "test",
+      placeholder: "Author Email",
+      value: authorEmail,
+      onChange: function onChange(e) {
+        return setAuthorEmail(e.target.value);
+      }
+    }), /*#__PURE__*/_react.default.createElement("input", {
+      type: "test",
+      placeholder: "Tags",
+      value: tags,
+      onChange: function onChange(e) {
+        return setTags(e.target.value);
+      }
+    }), /*#__PURE__*/_react.default.createElement("br", null), /*#__PURE__*/_react.default.createElement("label", null, "I agree that this information is correct", /*#__PURE__*/_react.default.createElement("input", {
+      type: "checkbox",
+      value: tickedCheckbox,
+      onChange: function onChange(e) {
+        return setTickedCheckbox(true);
+      }
+    }), /*#__PURE__*/_react.default.createElement("br", null)), /*#__PURE__*/_react.default.createElement("div", {
+      className: "radioGroup"
+    }, /*#__PURE__*/_react.default.createElement("label", null, "I would like to receive email updates", /*#__PURE__*/_react.default.createElement("input", {
+      type: "radio"
+    })), /*#__PURE__*/_react.default.createElement("label", null, "I would not like to receive emails", /*#__PURE__*/_react.default.createElement("input", {
+      type: "radio"
+    }))), /*#__PURE__*/_react.default.createElement("button", {
+      type: "submit"
+    }, "Submit")));
+  }
+};
+
+exports.AddForm = AddForm;
+},{"react":"../node_modules/react/index.js"}],"react/components/App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30393,6 +30588,10 @@ exports.App = void 0;
 var _react = _interopRequireWildcard(require("react"));
 
 var _PagesList = require("./PagesList");
+
+var _Page = require("./Page");
+
+var _form = require("./form");
 
 var _api = _interopRequireDefault(require("../api"));
 
@@ -30423,14 +30622,33 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var App = function App() {
+  // this is where we are creating our states 
   var _useState = (0, _react.useState)([]),
       _useState2 = _slicedToArray(_useState, 2),
-      pages = _useState2[0],
-      setPages = _useState2[1];
+      pagesCollection = _useState2[0],
+      setPagesCollection = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isPageView = _useState4[0],
+      setIsPageView = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({}),
+      _useState6 = _slicedToArray(_useState5, 2),
+      pageView = _useState6[0],
+      setPageView = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(''),
+      _useState8 = _slicedToArray(_useState7, 2),
+      form = _useState8[0],
+      setForm = _useState8[1];
+  /*This function fetches the api Url from the api.js file and converts the responsew to a Json format and inserts the data into one page. */
+
 
   function fetchPages() {
     return _fetchPages.apply(this, arguments);
-  }
+  } // it loads up one component within the page rather than the whole page
+
 
   function _fetchPages() {
     _fetchPages = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -30450,21 +30668,23 @@ var App = function App() {
 
             case 6:
               pagesData = _context.sent;
-              setPages(pagesData);
-              _context.next = 13;
+              setPagesCollection(pagesData);
+              setAuthorsList();
+              console.log(pagesData);
+              _context.next = 15;
               break;
 
-            case 10:
-              _context.prev = 10;
+            case 12:
+              _context.prev = 12;
               _context.t0 = _context["catch"](0);
               console.log("Oh no an error! ", _context.t0);
 
-            case 13:
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 10]]);
+      }, _callee, null, [[0, 12]]);
     }));
     return _fetchPages.apply(this, arguments);
   }
@@ -30472,13 +30692,23 @@ var App = function App() {
   (0, _react.useEffect)(function () {
     fetchPages();
   }, []);
-  return /*#__PURE__*/_react.default.createElement("main", null, /*#__PURE__*/_react.default.createElement("h1", null, "WikiVerse"), /*#__PURE__*/_react.default.createElement("h2", null, "An interesting \uD83D\uDCDA"), /*#__PURE__*/_react.default.createElement(_PagesList.PagesList, {
-    pages: pages
-  }));
+  /* this is where we can actually view our page, its a ternary that gets the page and setIsPageView from Page.js and if the ternary is false, then the function pagelist for pagelist.js runs and the setIsPageView becomes true which means that page is passed throug and shows the page where all the other article tiles are stores*/
+
+  return /*#__PURE__*/_react.default.createElement("main", null, /*#__PURE__*/_react.default.createElement("h1", null, "WikiVerse"), isPageView ? /*#__PURE__*/_react.default.createElement(_Page.Page, {
+    page: pageView,
+    setIsPageView: setIsPageView
+  }) : [/*#__PURE__*/_react.default.createElement("h2", {
+    key: 0
+  }, "An Interesting Title"), /*#__PURE__*/_react.default.createElement(_PagesList.PagesList, {
+    key: 1,
+    setPageView: setPageView,
+    setIsPageView: setIsPageView,
+    pages: pagesCollection
+  })]);
 };
 
 exports.App = App;
-},{"react":"../node_modules/react/index.js","./PagesList":"react/components/PagesList.js","../api":"react/api.js"}],"react/index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./PagesList":"react/components/PagesList.js","./Page":"react/components/Page.js","./form":"react/components/form.js","../api":"react/api.js"}],"react/index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -30520,7 +30750,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52066" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50521" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
